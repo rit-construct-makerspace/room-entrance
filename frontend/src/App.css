@@ -32,15 +32,15 @@ input {
 }
 
 div.server-response{
-  color:black;
+  color:white;
 }
 
 div.machine-use{
-  color:black;
+  color:white;
 }
 
 div.user-time {
-  color:black;
+  color:white;
 }
 
 div.machine-time {
