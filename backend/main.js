@@ -22,17 +22,19 @@ app.listen(port, () => {
 })
 
 
-function writeStringToFile(filename, data) {
-    fs.writeFileSync(filename, data, 'utf-8');
+function appendStringToFile(filename, data) {
+    fs.appendFileSync(filename, data, 'utf-8');
     console.log(`Data has been written to ${filename}`);
 }
 
 /**Function to write to log-file.txt */
 function writeToFile(tbdata) {
 
+    tbdata = tbdata + '\n';
+
     const filename = 'log_file.txt';
 
-    writeStringToFile(filename, tbdata);
+    appendStringToFile(filename, tbdata);
 
 
     // fs.readFile("log_file.json", "utf8", (err, data) => {

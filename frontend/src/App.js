@@ -38,12 +38,20 @@ const App = () => {
 
   /**This function is called every time the uid-textbox is updated*/
   const checkUid = (uidTemp) => {
+
+    if(uidTemp[0] === '?'){
+      uidTemp = "";
+      setUidInput("");
+    }
+
     setUidInput(uidTemp); //echo uid to textbox
     //check for valid input
     if(uidTemp[0] === ";" && uidTemp.length === UNFORMATTED_MAG_UID_LENGTH){
       ProccessUID(uidTemp.slice(1, 10));
+      setUidInput("");
     } else if(uidTemp[0] === "0" && uidTemp.length === UNFORMATTED_RFID_UID_LENGTH){
       ProccessUID(uidTemp.slice(1, 10));
+      setUidInput("");
     }
     else if (uidTemp[0] !== ";" &&  uidTemp[0] !== "0" && uidTemp.length === UNFORMATTED_RFID_UID_LENGTH){
       setUidInput('');
@@ -214,11 +222,20 @@ const App = () => {
           </div>
         </div>
         {/*<img src={require("../assets/logo.png")}/>*/}
+        <div>
+          Welcome to the SHED Makerspace!
+        </div>
         <div className="server-response">
           {output.length > 0 ? (<p>{output}</p>) : (<p>Swipe or Tap ID</p>)}
         </div>
         <div className="user-time"> {userTime > 0 ? (<p>{timeMinute}:{timeSecond}</p>) : (<p>Timed Out</p>)} </div>
         <button onClick={simulateSwipe}>SWIPE</button>
+
+        <div>
+          Please swipe your ID with the strip facing you
+        </div>
+        <img src={"../public/leftArrow.png"}/>
+
       </div>
   )
 }
