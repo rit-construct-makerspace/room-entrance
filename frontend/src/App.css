@@ -4,7 +4,7 @@ body {
   text-align: center;
   font-weight: bold;
   font-size: 40px;
-  color: #F76902;
+  color: white;
 }
 
 @keyframes flash {
@@ -32,15 +32,15 @@ input {
 }
 
 div.server-response{
-  color:white;
+  color:#F76902;
 }
 
 div.machine-use{
-  color:white;
+  color:#F76902;
 }
 
 div.user-time {
-  color:white;
+  color:#F76902;
 }
 
 div.machine-time {
