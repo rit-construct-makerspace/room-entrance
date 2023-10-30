@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import "./App.css";
-import leftArrow from '/public/leftArrow.png';
+import leftArrow from './public/leftArrow.png';
 
 
 const App = () => {
