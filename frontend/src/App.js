@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import "./App.css";
+const fs = require('fs');
+
+
 
 const App = () => {
 
   //gpio local backend url
-  const gpioBackend = "http://localhost:3001/pin"
   const writeBackend = "http://localhost:3001/writeToFile"
   const graphqlForwardingBackend = "http://localhost:3001/forwardRequest"
 
@@ -62,12 +64,24 @@ const App = () => {
     if (currUser === ""){
       sendQuery(validUid);
     }
-    else if (validUid === currUser){
-      // Current User wants to add more time, reset user time
-      setUidInput('');
-      setUserTime(USER_TIME_FRAME);
-      document.body.style.animation = "flash 0s";
-      document.getElementById("UIDinput").style.animation = "flash 0s";
+  }
+
+  /**Function allows Frontend to write to the log in the Backend */
+  function writeToBack(msg){
+    // axios.post(writeBackend, {data: msg})
+    //     .then(response => {
+    //       console.log('Write Success ', Boolean(response.data))
+    //     });
+
+    try {
+      fs.open('log_file.txt', 'a', function (err, file) {
+        fs.write(file, msg, function (err) {
+          fs.close(file, function (err) {
+          });
+        });
+      });
+    } catch (error){
+      console.error(error)
     }
   }
 
@@ -86,16 +100,26 @@ const App = () => {
       }
     }
 
-    var access
+    var firstname;
     // axios.post(graphqlForwardingBackend, body, options)
-    //     .then(resp => (access=Boolean(resp.data)))     // set access variable to match the query response
+    //     .then(resp => (firstname=Boolean(resp.data)))     // set access variable to match the query response
     //     .catch(error =>console.error(error))
 
-    // access = true; //Example access for testing
-    console.log(access);
+    firstname = 'Max';
 
-    if (access === true) {
+    if (firstname !== '') {
       loginUID(validUid);
+
+      var currentdate = new Date();
+      var datetime = "User Swiped: " + currentdate.getDate() + "/"
+          + (currentdate.getMonth()+1)  + "/"
+          + currentdate.getFullYear() + " @ "
+          + currentdate.getHours() + ":"
+          + currentdate.getMinutes() + ":"
+          + currentdate.getSeconds();
+
+
+      writeToBack(datetime);
     }
     else {
       setOutput("User Recognized");
@@ -148,10 +172,7 @@ const App = () => {
     if (userTime === 0) {
       logoutUID();
     }
-    if (userTime === MINUTES){
-      document.body.style.animation = "flash 2s infinite";
-      document.getElementById("UIDinput").style.animation = "flash 2s infinite";
-    }
+
     //update user time in html
     let min = Math.floor(userTime/60);
     let sec = userTime%60;
