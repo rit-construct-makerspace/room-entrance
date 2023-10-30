@@ -162,7 +162,7 @@ const App = () => {
     setUser(validUid);
     document.body.style.background = "limegreen";
     document.body.style.animation = "flash 0s";
-    document.getElementById("UIDinput").style.background = "#F76902";
+    //document.getElementById("UIDinput").style.background = "Crimson";
     //document.getElementById("UIDinput").style.color = "Crimson";
     document.getElementById("UIDinput").style.animation = "flash 0s";
   }
