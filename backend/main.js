@@ -21,36 +21,39 @@ app.listen(port, () => {
     console.log(`API server is running on port ${port}`);
 })
 
+
+function writeStringToFile(filename, data) {
+    fs.writeFileSync(filename, data, 'utf-8');
+    console.log(`Data has been written to ${filename}`);
+}
+
 /**Function to write to log-file.txt */
 function writeToFile(tbdata) {
-    // fs.open('log_file.txt', 'a', function(err, file) {
-    //     if (err) {console.error(err);}
-    //     fs.write(file, data, function(err) {
-    //         if (err) {console.error(err);}
-    //         fs.close(file, function(err){
-    //             if (err) {console.error(err);}
+
+    const filename = 'log_file.txt';
+
+    writeStringToFile(filename, tbdata);
+
+
+    // fs.readFile("log_file.json", "utf8", (err, data) => {
+    //     if (err) {
+    //         console.error('Error reading file:', err);
+    //         return;
+    //     }
+    //
+    //     try {
+    //         const jsonData = JSON.parse(data);
+    //         jsonData.SWIPE_LOGS.push({ swipe: tbdata });
+    //
+    //         fs.writeFile('log_file.json', JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+    //             if (err) {
+    //                 console.error('Error writing file:', err);
+    //             }
     //         });
-    //     });
-    // });
-    fs.readFile("log_file.json", "utf8", (err, data) => {
-        if (err) {
-            console.error('Error reading file:', err);
-            return;
-        }
-
-        try {
-            const jsonData = JSON.parse(data);
-            jsonData.SWIPE_LOGS.push({ swipe: tbdata });
-
-            fs.writeFile('log_file.json', JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
-                if (err) {
-                    console.error('Error writing file:', err);
-                }
-            });
-        } catch (error) {
-            console.error('JSON parsing error:', error);
-        }
-    })
+    //     } catch (error) {
+    //         console.error('JSON parsing error:', error);
+    //     }
+    // })
 
     // fs.writeFile('log_file.json', data, (err) => {
     //     if (err) {
