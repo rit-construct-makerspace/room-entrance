@@ -1,5 +1,5 @@
 body {
-  background: LimeGreen;
+  background: #F76902;
   animation-direction: alternate;
   text-align: center;
   font-weight: bold;
@@ -9,8 +9,8 @@ body {
 
 @keyframes flash {
   from {
-    background-color: LimeGreen;
-    color: LimeGreen;}
+    background-color: #F76902;
+    color: #F76902;}
   to {
     background-color: Crimson;
     color: Crimson;}
@@ -23,8 +23,8 @@ div.uid-textbox{
 }
 
 input {
-  color:LimeGreen;
-  background-color:LimeGreen;
+  color:#F76902;
+  background-color:#F76902;
   border: none;
   outline: none;
   position: absolute;
@@ -32,18 +32,26 @@ input {
 }
 
 div.server-response{
-  color:White;
+  color:black;
 }
 
 div.machine-use{
-  color:White;
+  color:black;
 }
 
 div.user-time {
-  color:White;
+  color:black;
 }
 
 div.machine-time {
   display: none;
 }
 
+div.header {
+  background-color: #F76902;
+  min-height: 1em;
+}
+
+img {
+  min-width: 40%;
+}

@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import "./App.css";
-const fs = require('fs');
-
 
 
 const App = () => {
@@ -18,7 +16,7 @@ const App = () => {
   //constant for time
   const MINUTES = 60                  // 1 min = 60 sec
   const HOUR = 60*MINUTES             // 1 hr = 60 min
-  const USER_TIME_FRAME = 1*MINUTES/12   // Time that user logged in flashes for (5 seconds)
+  const USER_TIME_FRAME = 1*MINUTES/20   // Time that user logged in flashes for (5 seconds)
 
 
   //This piece of state contains the text currently
@@ -33,7 +31,7 @@ const App = () => {
 
 
   //Count time user is logged in
-  const [userTime, setUserTime] = useState(USER_TIME_FRAME)
+  const [userTime, setUserTime] = useState(0)
   const [timeSecond, setSecond] = useState("00")
   const [timeMinute, setMinute] = useState("00")
 
@@ -42,12 +40,12 @@ const App = () => {
   const checkUid = (uidTemp) => {
     setUidInput(uidTemp); //echo uid to textbox
     //check for valid input
-    if(uidTemp[0] === ";" && uidInput.length === UNFORMATTED_MAG_UID_LENGTH){
+    if(uidTemp[0] === ";" && uidTemp.length === UNFORMATTED_MAG_UID_LENGTH){
       ProccessUID(uidTemp.slice(1, 10));
-    } else if(uidTemp[0] === "0" && uidInput.length === UNFORMATTED_RFID_UID_LENGTH){
+    } else if(uidTemp[0] === "0" && uidTemp.length === UNFORMATTED_RFID_UID_LENGTH){
       ProccessUID(uidTemp.slice(1, 10));
     }
-    else if (uidTemp[0] !== ";" &&  uidTemp[0] !== "0" && uidInput.length === UNFORMATTED_RFID_UID_LENGTH){
+    else if (uidTemp[0] !== ";" &&  uidTemp[0] !== "0" && uidTemp.length === UNFORMATTED_RFID_UID_LENGTH){
       setUidInput('');
       setOutput("Invalid Swipe");
     }
@@ -67,23 +65,23 @@ const App = () => {
   }
 
   /**Function allows Frontend to write to the log in the Backend */
-  function writeToBack(msg){
-    // axios.post(writeBackend, {data: msg})
-    //     .then(response => {
-    //       console.log('Write Success ', Boolean(response.data))
-    //     });
+  // function writeToBack(msg){
+  //   // axios.post(writeBackend, {data: msg})
+  //   //     .then(response => {
+  //   //       console.log('Write Success ', Boolean(response.data))
+  //   //     });
 
-    try {
-      fs.open('log_file.txt', 'a', function (err, file) {
-        fs.write(file, msg, function (err) {
-          fs.close(file, function (err) {
-          });
-        });
-      });
-    } catch (error){
-      console.error(error)
-    }
-  }
+  //   try {
+  //     fs.open('log_file.txt', 'a', function (err, file) {
+  //       fs.write(file, msg, function (err) {
+  //         fs.close(file, function (err) {
+  //         });
+  //       });
+  //     });
+  //   } catch (error){
+  //     console.error(error)
+  //   }
+  // }
 
   /**This function is called when the uid state is updated
    *   It queries the proxy server by sending the uid and machine id
@@ -116,10 +114,13 @@ const App = () => {
           + currentdate.getFullYear() + " @ "
           + currentdate.getHours() + ":"
           + currentdate.getMinutes() + ":"
-          + currentdate.getSeconds();
+          + currentdate.getSeconds()
+          + '\n';
 
 
-      writeToBack(datetime);
+      console.log("WRITE TO BACK")
+      //writeToBack(datetime);
+      writeToBack(currentdate.toString())
     }
     else {
       setOutput("User Recognized");
@@ -127,28 +128,46 @@ const App = () => {
     }
   }
 
+  //send http request to express server to log time of swipe
+  function writeToBack(timeOfSwipe) {
+    fetch(writeBackend, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data:timeOfSwipe}),
+    })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+  }
+
   /**Log in a current user */
   function loginUID(validUid) {
     //reset the uid textbox
     setUidInput('');
-    setOutput("User Logged In");
+    setOutput("SUCCESS");
     setUser(validUid);
-    document.body.style.background = "Crimson";
+    document.body.style.background = "limegreen";
     document.body.style.animation = "flash 0s";
-    document.getElementById("UIDinput").style.background = "Crimson";
-    document.getElementById("UIDinput").style.color = "Crimson";
+    //document.getElementById("UIDinput").style.background = "Crimson";
+    //document.getElementById("UIDinput").style.color = "Crimson";
     document.getElementById("UIDinput").style.animation = "flash 0s";
   }
 
   /**Remove current user a.k.a Log out */
   function logoutUID() {
-    setUser("");
-    setOutput("");
+    setUser('');
+    setOutput('');
     setUserTime(USER_TIME_FRAME);
-    document.body.style.background = "LimeGreen";
+    document.body.style.background = "white";
     document.body.style.animation = "flash 0s";
-    document.getElementById("UIDinput").style.background = "LimeGreen";
-    document.getElementById("UIDinput").style.color = "LimeGreen";
+    document.getElementById("UIDinput").style.background = "#F76902";
+    document.getElementById("UIDinput").style.color = "#F76902";
     document.getElementById("UIDinput").style.animation = "flash 0s";
   }
 
@@ -163,7 +182,7 @@ const App = () => {
     }, 1000);
     // clear out the interval using it id when unmounting the component
     return () => clearInterval(secInterval);
-  }, [currUser, userTime]);
+  }, [currUser]);
 
   /**Auto Logout Current user when userTime == 0
    *   Keep Count of User Time
@@ -180,16 +199,26 @@ const App = () => {
     setMinute(min > 9 ? min : '0' + min);
   }, [userTime]);
 
+
+
+  function simulateSwipe() {
+    checkUid(';XXXXXXXXXXXXXX')
+  }
+
   //HTML Output
   return(
       <div className="acs-parent">
-        <div className="uid-textbox">
-          <input id="UIDinput" autoFocus="autofocus" value={uidInput} onChange={(event) => checkUid(event.target.value)} />
+        <div className="header">
+          <div className="uid-textbox">
+            <input id="UIDinput" autoFocus="autofocus" value={uidInput} onChange={(event) => checkUid(event.target.value)} />
+          </div>
         </div>
+        {/*<img src={require("../assets/logo.png")}/>*/}
         <div className="server-response">
           {output.length > 0 ? (<p>{output}</p>) : (<p>Swipe or Tap ID</p>)}
         </div>
         <div className="user-time"> {userTime > 0 ? (<p>{timeMinute}:{timeSecond}</p>) : (<p>Timed Out</p>)} </div>
+        <button onClick={simulateSwipe}>SWIPE</button>
       </div>
   )
 }
