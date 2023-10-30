@@ -229,7 +229,7 @@ const App = () => {
           {output.length > 0 ? (<p>{output}</p>) : (<p>Swipe or Tap ID</p>)}
         </div>
         <div className="user-time"> {userTime > 0 ? (<p>{timeMinute}:{timeSecond}</p>) : (<p>Timed Out</p>)} </div>
-        <button onClick={simulateSwipe}>SWIPE</button>
+        {/*<button onClick={simulateSwipe}>SWIPE</button>*/}
 
         <div>
           Please swipe your ID with the strip facing you
