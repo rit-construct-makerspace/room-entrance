@@ -172,7 +172,7 @@ const App = () => {
     setUser('');
     setOutput('');
     setUserTime(USER_TIME_FRAME);
-    document.body.style.background = "white";
+    document.body.style.background = "#F76902";
     document.body.style.animation = "flash 0s";
     document.getElementById("UIDinput").style.background = "#F76902";
     document.getElementById("UIDinput").style.color = "#F76902";
